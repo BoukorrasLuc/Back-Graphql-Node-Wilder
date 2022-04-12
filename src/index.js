@@ -25,22 +25,32 @@ const typeDefs = gql`
     votes: Int
   }
 
+  input SpecialsSkills {
+    title: String
+    votes: Int
+  }
+
   type Query {
     # trouver tous les wilders
     getWilders: [Wilder]
     # trouver le wilder par rapport a son id
-    getWilder(id: ID!): Wilder
+    getWilder(id: ID): Wilder
   }
 
   type Mutation {
     # ajouter un wilder
-    addWilder(name: String!, city: String!): Wilder
+    addWilder(name: String, city: String, skills: [SpecialsSkills]): Wilder
 
     # supprimer un wilder
-    deleteWilder(id: ID!): Wilder
+    deleteWilder(id: ID): Wilder
 
     # modifier un wilder
-    updateWilder(id: ID!, name: String, city: String): Wilder
+    updateWilder(
+      id: ID
+      name: String
+      city: String
+      skills: [SpecialsSkills]
+    ): Wilder
   }
 `;
 
@@ -54,6 +64,7 @@ const resolvers = {
       const wilder = new Wilder({
         name: args.name,
         city: args.city,
+        skills: args.skills,
       });
       await wilder.save();
       return wilder;
@@ -63,9 +74,15 @@ const resolvers = {
       return { id: args.id };
     },
     updateWilder: async (parent, args) => {
-      const wilder = await Wilder.findByIdAndUpdate(args.id, args, {
-        new: true,
-      });
+      const wilder = await Wilder.findByIdAndUpdate(
+        args.id,
+        {
+          name: args.name,
+          city: args.city,
+          skills: args.skills,
+        },
+        { new: true }
+      );
       return wilder;
     },
   },
