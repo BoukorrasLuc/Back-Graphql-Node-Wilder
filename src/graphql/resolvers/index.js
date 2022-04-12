@@ -1,5 +1,5 @@
 // Models
-const { Wilder } = require("../../models/wilder");
+const Wilder = require("../../models/wilder");
 
 const resolvers = {
   Query: {
@@ -36,4 +36,4 @@ const resolvers = {
   },
 };
 
-module.export = resolvers;
+module.exports = resolvers;
